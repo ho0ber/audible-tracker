@@ -81,7 +81,7 @@ jobs:
             git add $f
           done
           git commit -m "[skip actions] Image Update: ${{ github.event.head_commit.message }}"
-          git push origin master
+          git push origin main
 
       - name: Save DigitalOcean kubeconfig with short-lived credentials
         run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 $CLUSTER_NAME
