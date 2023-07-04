@@ -11,4 +11,4 @@ auth = audible.Authenticator.from_login(
 )
 
 # Save credentials to file
-auth.to_file("creds")
+auth.to_file("audible-creds")

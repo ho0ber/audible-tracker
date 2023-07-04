@@ -6,6 +6,12 @@ from prometheus_client import start_http_server, Gauge
 
 BOOK_POSITION = Gauge("book_position", "the positions of books in ms", ["asin", "book"])
 
+def batched(iterable, batch_size):
+    """ Replace with itertools.batched in python3.12"""
+    iterator = iter(iterable)
+    while batch := list(itertools.islice(iterator, batch_size)):
+        yield batch
+
 def delay_duration(func, seconds=60):
     def wrapper(*args, **kwargs):
         start_time = time.time()
@@ -18,7 +24,7 @@ def delay_duration(func, seconds=60):
 
 @delay_duration
 def update_positions():
-    auth = audible.Authenticator.from_file("creds")
+    auth = audible.Authenticator.from_file("audible-creds")
     with audible.Client(auth=auth) as client:
         library = client.get(
             "1.0/library",
@@ -34,7 +40,7 @@ def update_positions():
         asins = [b["asin"] for b in library["items"]]
 
         positions_table = []
-        for asin_batch in itertools.batched(asins,25):
+        for asin_batch in batched(asins,25):
             last = client.get("1.0/annotations/lastpositions", asins=",".join(asin_batch))
             for pos in last["asin_last_position_heard_annots"]:
                 if pos["last_position_heard"].get("status") == "Exists" and \
@@ -50,7 +56,7 @@ def update_positions():
         return 
 
 def main():
-    start_http_server(8000)
+    start_http_server(9999)
     while True:
         update_positions()
 

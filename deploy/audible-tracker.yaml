@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: audible-tracker
+spec:
+  selector:
+    matchLabels:
+      app: audible-tracker
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: audible-tracker
+    spec:
+      containers:
+      - image: ghcr.io/ho0ber/audible-tracker/audible-tracker:build-4213638713
+        imagePullPolicy: Always
+        name: audible-tracker
+        ports:
+        - containerPort: 9999
+        volumeMounts:
+          - mountPath: "/tmp"
+            name: audible-creds
+            readOnly: true
+      volumes:
+        - name: audible-creds
+          secret:
+            secretName: audible-creds
+      imagePullSecrets:
+      - name: regcred
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: audible-tracker
+spec:
+  type: NodePort
+  ports:
+  - port: 9999
+    nodePort: 32999
+    targetPort: 9999
+    protocol: TCP
+  selector:
+    app: audible-tracker

@@ -1,0 +1,44 @@
+name: Docker
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Log into registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+      -
+        name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          push: true
+          tags: ghcr.io/ho0ber/audible-tracker/audible-tracker:build-${{ github.run_id }}
+          platforms: linux/arm/v7
+
+      - name: Update image
+        run: |
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "GitHub Actions"
+
+          for f in deploy/*; do
+            sed -i "s/\:build\-.*/:build-${GITHUB_RUN_ID}/g" $f
+            git add $f
+          done
+
+          git commit -m "[skip actions] Image Update: ${{ github.event.head_commit.message }}"
+          git push origin ${GITHUB_REF##*/}
