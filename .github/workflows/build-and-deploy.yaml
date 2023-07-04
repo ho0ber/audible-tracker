@@ -3,12 +3,12 @@ name: Docker
 on:
   push:
     branches:
-      - master
+      - main
 
   pull_request: #tests only
 
 env:
-  IMAGE_NAME: hoob-io
+  IMAGE_NAME: audible-tracker
   CLUSTER_NAME: hoobio
 
 jobs:
