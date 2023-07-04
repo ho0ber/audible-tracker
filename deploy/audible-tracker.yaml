@@ -28,18 +28,42 @@ spec:
             secretName: audible-creds
       imagePullSecrets:
       - name: regcred
-
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: audible-tracker
 spec:
-  type: NodePort
   ports:
-  - port: 9999
-    nodePort: 32999
+  - port: 80
     targetPort: 9999
     protocol: TCP
   selector:
     app: audible-tracker
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: audible-tracker-ingress
+  labels:
+    kcert.dev/ingress: "managed"
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+spec:
+  tls:
+  - hosts:
+    - audible.hoob.io
+    secretName: audible-tracker-kcert-tls
+  rules:
+  - host: audible.hoob.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: audible-tracker
+            port:
+              number: 80
