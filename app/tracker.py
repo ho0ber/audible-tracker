@@ -50,7 +50,7 @@ def update_positions():
                         position = pos["last_position_heard"].get("position_ms")
                         updated = pos["last_position_heard"].get("last_updated")
                         title = asin_to_title[asin]
-                        updated_dt = datetime.strptime(updated, '%m-%d-%y %H:%M:%S')
+                        updated_dt = datetime.fromisoformat(updated)
                         if updated_dt > datetime.datetime.now() - datetime.timedelta(days = 2):
                             positions_table.append((asin, title, position, updated))
                             BOOK_POSITION.labels(asin, title).set(position)
