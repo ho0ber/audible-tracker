@@ -13,7 +13,7 @@ spec:
         app: audible-tracker
     spec:
       containers:
-      - image: ghcr.io/ho0ber/audible-tracker/audible-tracker:build-5458529667
+      - image: ghcr.io/ho0ber/audible-tracker/audible-tracker:build-5458544601
         imagePullPolicy: Always
         name: audible-tracker
         ports:
