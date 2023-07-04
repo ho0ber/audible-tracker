@@ -5,7 +5,7 @@ import getpass
 # Authorize and register in one step
 auth = audible.Authenticator.from_login(
     input("username:"),
-    getpass.getpass("password":),
+    getpass.getpass("password:"),
     locale="us",
     with_username=False
 )
