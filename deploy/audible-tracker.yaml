@@ -46,16 +46,10 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: audible-tracker-ingress
-  labels:
-    kcert.dev/ingress: "managed"
   annotations:
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/proxy-body-size: "0"
 spec:
-  tls:
-  - hosts:
-    - aud.hoob.io
-    secretName: aud-kcert-tls
   rules:
   - host: aud.hoob.io
     http:
