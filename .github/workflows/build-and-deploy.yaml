@@ -28,6 +28,7 @@ jobs:
           fi
 
   push:
+    permissions: write-all
     needs: test
 
     runs-on: ubuntu-latest
