@@ -5,7 +5,7 @@ from datetime import datetime
 from tabulate import tabulate
 from prometheus_client import start_http_server, Gauge
 
-BOOK_POSITION = Gauge("book_position", "the positions of books in ms", ["asin", "book"])
+BOOK_POSITION = Gauge("audiobook_position", "the positions of books in ms", ["asin", "title"])
 
 def batched(iterable, batch_size):
     """ Replace with itertools.batched in python3.12"""
