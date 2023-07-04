@@ -1,6 +1,7 @@
 import audible
 import itertools
 import time
+from datetime import datetime
 from tabulate import tabulate
 from prometheus_client import start_http_server, Gauge
 
@@ -49,8 +50,10 @@ def update_positions():
                         position = pos["last_position_heard"].get("position_ms")
                         updated = pos["last_position_heard"].get("last_updated")
                         title = asin_to_title[asin]
-                        positions_table.append((asin, title, position, updated))
-                        BOOK_POSITION.labels(asin, title).set(position)
+                        updated_dt = datetime.strptime(updated, '%m-%d-%y %H:%M:%S')
+                        if updated_dt > datetime.datetime.now() - datetime.timedelta(days = 2):
+                            positions_table.append((asin, title, position, updated))
+                            BOOK_POSITION.labels(asin, title).set(position)
         positions_table.sort(key=lambda x: x[3], reverse=True)
         print(tabulate(positions_table, headers=("asin", "title", "position", "updated")))
         return 
