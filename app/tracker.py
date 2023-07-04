@@ -24,7 +24,7 @@ def delay_duration(func, seconds=60):
 
 @delay_duration
 def update_positions():
-    auth = audible.Authenticator.from_file("audible-creds")
+    auth = audible.Authenticator.from_file("/tmp/audible-creds")
     with audible.Client(auth=auth) as client:
         library = client.get(
             "1.0/library",
