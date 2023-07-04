@@ -54,10 +54,10 @@ metadata:
 spec:
   tls:
   - hosts:
-    - audible.hoob.io
-    secretName: audible-tracker-kcert-tls
+    - aud.hoob.io
+    secretName: aud-kcert-tls
   rules:
-  - host: audible.hoob.io
+  - host: aud.hoob.io
     http:
       paths:
       - path: /
