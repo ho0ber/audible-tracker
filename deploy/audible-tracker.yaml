@@ -46,9 +46,8 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: audible-tracker-ingress
-  annotations:
-    kubernetes.io/ingress.class: caddy
 spec:
+  ingressClassName: nginx
   tls:
   - hosts:
     - audible.hoob.io
